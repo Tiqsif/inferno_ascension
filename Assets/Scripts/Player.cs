@@ -18,7 +18,7 @@ public class Player : MonoBehaviour
     public void Die()
     {
         Debug.Log("Player died");
-        GameManager.Instance.SetGameState(GameManager.GameState.GameOver);
-        Destroy(gameObject);
+        //GameManager.Instance.SetGameState(GameManager.GameState.GameOver);
+        //Destroy(gameObject);
     }
 }

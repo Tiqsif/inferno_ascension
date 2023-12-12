@@ -34,9 +34,13 @@ public class HookController : MonoBehaviour
     private Rigidbody2D playerRb;
     private Vector3 playerInitialPos;
     private Animator playerAnimator;
+
+
+    private GameManager gameManager;
     void Start()
     {
-        
+        gameManager = GameManager.Instance;
+        // hold point is the point where the hook is attached and rotates around
         holdPoint = transform.parent;
 
         player = holdPoint.parent;
@@ -56,13 +60,22 @@ public class HookController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
 
         rb.simulated = false;
+        RaycastHit2D hit = Physics2D.Raycast(player.position, -player.up, range);
+        if (hit)
+        {
+            Debug.Log("hit: " + hit.collider.gameObject.name);
+            StartCoroutine(JumpToPlatform(player.position, hit.collider.gameObject.GetComponent<Platform>(), 0.1f));
+        }
     }
 
     void Update()
     {
+        if (gameManager.GetGameState() == GameManager.GameState.GameOver) return;        
+            
+        
         rotation = transform.rotation.eulerAngles.z;
         playerAnimator.SetBool("isClimbing", isPlayerClimbing);
-        if (isThrown && Mathf.Abs((player.transform.position - transform.position).magnitude) > range) {
+        if (isThrown && Mathf.Abs((player.transform.position - transform.position).magnitude) > range) { // if too far away from player
             ResetHook();
         }
         if (isThrown)
@@ -80,16 +93,16 @@ public class HookController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R) && !isPlayerClimbing && !isThrown)
         {
-            ResetScene();
+            ResetScene(); // teleport player to initial position DO NOT USE THIS IN GAME - WILL BE REMOVED
          
         }
-        if (!isThrown && !isPlayerClimbing && Input.GetMouseButton(0))
+        if (!isThrown && !isPlayerClimbing && Input.GetMouseButton(0)) // hold mouse click to rotate the hook and aim
         {
             RotateHook();
 
             
         }
-        if (!isThrown && !isPlayerClimbing && Input.GetMouseButtonUp(0))
+        if (!isThrown && !isPlayerClimbing && Input.GetMouseButtonUp(0)) // release mouse click to throw the hook
         {
             ThrowHook();
         }
@@ -100,7 +113,7 @@ public class HookController : MonoBehaviour
         
     }
 
-    void CreateChain(Vector3 from, Vector3 to)
+    void CreateChain(Vector3 from, Vector3 to) // creates chain sprites between two points
     {
         Vector3 v = to - from;
         for (int i = 0; i < Mathf.FloorToInt (v.magnitude / chainSizeY); i++)
@@ -136,7 +149,7 @@ public class HookController : MonoBehaviour
         */
     }
 
-    void ThrowHook()
+    void ThrowHook() // throw the hooks rigidbody
     {
         isThrown = true;
         rb.simulated = true;
@@ -145,22 +158,22 @@ public class HookController : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Platform") && isThrown)
+        if (collision.gameObject.CompareTag("Platform") && isThrown) // if hook hits a platform, transfer player to the platform
         {
             
             Platform platform = collision.gameObject.GetComponent<Platform>();
             rb.velocity = Vector2.zero;
             rb.simulated = false;
             isThrown = false;
-            float distance = Mathf.Abs( Vector3.Distance(transform.position, player.transform.position) );
-            StartCoroutine(MovePlayer(transform.position, platform, distance / playerClimbSpeed));
+            float distance = Mathf.Abs( Vector3.Distance(transform.position, player.transform.position) ); // hook is thrown so the distance is the distance between player and hook
+            StartCoroutine(MovePlayer(transform.position, platform, distance / playerClimbSpeed)); // slowly move player to the platform
             
             
             
         }
         
     }
-    void TeleportPlayer(Vector3 to)
+    void TeleportPlayer(Vector3 to) // teleport player to a position
     { 
         isPlayerClimbing = false;
         player.position = to;
@@ -185,8 +198,8 @@ public class HookController : MonoBehaviour
         Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, player.position.y, Camera.main.transform.position.z);
     }
 
-    private void ResetScene()
-    { // ilk bastiginda yanlis konumda ikinci bastiginda duzgun konuma geliyor
+    private void ResetScene() // DO NOT USE THIS IN GAME - WILL BE REMOVED
+    { 
         
         player.position = playerInitialPos;
         //hookStartPos = rotateAround + Vector3.up * 0.8f;
@@ -198,7 +211,7 @@ public class HookController : MonoBehaviour
 
         
     }
-    private void ResetHook()
+    private void ResetHook() // reset hook next to player
     {
         foreach (Transform child in transform)
         {
@@ -221,7 +234,7 @@ public class HookController : MonoBehaviour
         //Debug.Log("resetted, initial pos: " + initialPos + "initialLocalPos: " + initialLocalPos + "pos:" + transform.position + "localpos:" + transform.localPosition );
         CreateChain(rotateAround, transform.position);
     }
-    private IEnumerator MovePlayer(Vector3 hit, Platform platform, float time)
+    private IEnumerator MovePlayer(Vector3 hit, Platform platform, float time) // move player to the platform over time
     {
         isPlayerClimbing = true;
         transform.parent = null;
@@ -239,18 +252,13 @@ public class HookController : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-        StartCoroutine(JumpToPlatform(hit, platform, playerJumpHeight/playerJumpSpeed));
-        /*
-        transform.parent = holdPoint;
-        foreach (Transform child in transform)
-        {
-            Destroy(child.gameObject);
-        }
-        TeleportPlayer(platform.standPoint.position);*/
+        StartCoroutine(JumpToPlatform(hit, platform, playerJumpHeight/playerJumpSpeed)); // overshoot the platform a little and jump on it
+        
     }
     
-    private IEnumerator JumpToPlatform(Vector3 hit, Platform platform, float time)
-    { // jump animasyon ekle
+    private IEnumerator JumpToPlatform(Vector3 hit, Platform platform, float time) // for animation purposes
+    { 
+        Debug.Log("jumping to platform" + platform.gameObject.name);
         player.rotation = Quaternion.Euler(player.rotation.eulerAngles.x, player.rotation.eulerAngles.y, 0);
         float elapsedTime = 0;
         Vector3 startingPos = playerRb.position;
@@ -275,11 +283,11 @@ public class HookController : MonoBehaviour
         }
         //Debug.Log("endedup at: " + playerRb.position);
         transform.parent = holdPoint;
-        foreach (Transform child in transform)
+        foreach (Transform child in transform) // destroy chain sprites
         {
             Destroy(child.gameObject);
         }
-        
+        platform.SetCurrent();
         TeleportPlayer(platform.standPoint.position);
     }
 }

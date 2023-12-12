@@ -8,6 +8,7 @@ TagManager:
   - Platform
   - PauseMenu
   - GameOverMenu
+  - ScoreHolder
   layers:
   - Default
   - TransparentFX

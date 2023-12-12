@@ -126,4 +126,5 @@ MonoBehaviour:
   - {fileID: 21300000, guid: c9aab44c8bbe45b4ba7d192c124af671, type: 3}
   - {fileID: 21300000, guid: da026e7ce23d42945b7f3c81d3bc7152, type: 3}
   - {fileID: 21300000, guid: aa69027b6e6893949bd7f1ab8202882c, type: 3}
+  coinSprite: {fileID: 21300000, guid: 9f26712cd416a2648a21c7adf2563044, type: 3}
   standPoint: {fileID: 0}

@@ -1,15 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml.Serialization;
 using UnityEngine;
 
 public class Platform : MonoBehaviour
 {
-    [SerializeField]  private Sprite[] stoneSprites;
-    public Transform standPoint;
+    [SerializeField] private Sprite[] stoneSprites; // plaform sprite consists of multiple stone sprites
+    [SerializeField] private Sprite coinSprite;
+    private GameObject coin;
+    public Transform standPoint; // the point where the player stands on the platform
+    private bool hasCoin = false;
+    public bool isCurrentPlatform = false; 
+    GameManager gameManager;
     private void Awake()
     {
+        gameManager = GameManager.Instance;
         ShuffleArray(stoneSprites);
+        hasCoin = Random.Range(0, 10) == 0; // 10% chance of having a coin
+        standPoint = transform.GetChild(0).GetComponent<Transform>();
     }
     void Start()
     {
@@ -21,6 +28,14 @@ public class Platform : MonoBehaviour
             spriteObj.transform.position = new Vector3(transform.position.x + (i - 1) * 0.64f, transform.position.y, transform.position.z);
             spriteObj.AddComponent<SpriteRenderer>().sprite = stoneSprites[i];
         }
+        if (hasCoin)
+        {
+            coin = new GameObject("Coin");
+            coin.transform.parent = transform;
+            coin.transform.position = new Vector3(transform.position.x, transform.position.y + 0.64f, transform.position.z);
+            coin.AddComponent<SpriteRenderer>().sprite = coinSprite;
+        }
+
         /*
         GameObject sprite0 = new GameObject("sprite0");
         sprite0.transform.parent = transform;
@@ -38,7 +53,6 @@ public class Platform : MonoBehaviour
         sprite2.AddComponent<SpriteRenderer>().sprite = stone2;
         */
 
-        standPoint = transform.GetChild(0).GetComponent<Transform>();
         //Debug.Log(standPoint.gameObject.name);
     }
 
@@ -47,7 +61,7 @@ public class Platform : MonoBehaviour
     {
         
     }
-    private void ShuffleArray<T>(T[] array)
+    private void ShuffleArray<T>(T[] array) // used for randomizing stone sprites
     {
         int n = array.Length;
         for (int i = 0; i < n; i++)
@@ -57,5 +71,20 @@ public class Platform : MonoBehaviour
             array[r] = array[i];
             array[i] = temp;
         }
+    }
+    public bool HasCoin()
+    {
+        return hasCoin;
+    }
+    public void SetCurrent() // if player hooks to current platform dont add score
+    {
+        if (isCurrentPlatform) return;
+        if (hasCoin)
+        {
+            GameManager.AddScore(10);
+            hasCoin = false;
+        }
+        Destroy(coin);
+        isCurrentPlatform = true;
     }
 }

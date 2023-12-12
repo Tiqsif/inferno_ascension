@@ -347,6 +347,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1277579854}
     - target: {fileID: 539717372120018982, guid: bc4200f1bbb27a542a76ebd45cfd2372, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 539717372120018982, guid: bc4200f1bbb27a542a76ebd45cfd2372, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: MainMenu
       objectReference: {fileID: 0}
@@ -450,10 +454,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2924213529981310469, guid: bc4200f1bbb27a542a76ebd45cfd2372, type: 3}
+      propertyPath: m_Name
+      value: HighNumber
+      objectReference: {fileID: 0}
     - target: {fileID: 3179839687249258421, guid: bc4200f1bbb27a542a76ebd45cfd2372, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1277579854}
+    - target: {fileID: 3179839687249258421, guid: bc4200f1bbb27a542a76ebd45cfd2372, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3179839687249258421, guid: bc4200f1bbb27a542a76ebd45cfd2372, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: PlayPressed
@@ -481,6 +493,14 @@ PrefabInstance:
     - target: {fileID: 4161004962304629165, guid: bc4200f1bbb27a542a76ebd45cfd2372, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: MenuManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6961377695516332770, guid: bc4200f1bbb27a542a76ebd45cfd2372, type: 3}
+      propertyPath: m_Name
+      value: HighScore
+      objectReference: {fileID: 0}
+    - target: {fileID: 9023047981685361765, guid: bc4200f1bbb27a542a76ebd45cfd2372, type: 3}
+      propertyPath: m_text
+      value: High Score
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -899,6 +919,10 @@ PrefabInstance:
     - target: {fileID: 7434940400018541390, guid: fcb5f16b0f66ba04785cc6fa78f5b3ad, type: 3}
       propertyPath: m_Name
       value: Platform
+      objectReference: {fileID: 0}
+    - target: {fileID: 7488910437374241750, guid: fcb5f16b0f66ba04785cc6fa78f5b3ad, type: 3}
+      propertyPath: isCurrentPlatform
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

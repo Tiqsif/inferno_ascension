@@ -2,22 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.SceneManagement;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
+using System.IO;
+using static GameManager;
 
 public class GameManager : MonoBehaviour
-{// ui prefablerini instancela
+{ 
     static GameManager instance;
     static GameState gameState;
     public static event Action<GameState> OnGameStateChanged;
     static int score = 0;
+    static int highScore = 0;
     public static GameManager Instance
     {
         get
         {
-            if (instance == null) // En baþta burasý var mý yok mu diye kontrol ediyoruz ve yoksa buradan bir kopya oluþturuyoruz.
+            if (instance == null) // singleton pattern
             {
                 GameObject go = new GameObject("GameManager");
                 instance = go.AddComponent<GameManager>();
@@ -39,6 +41,7 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
+        highScore = GetHighScore();
         Time.timeScale = 1.0f;
     }
 
@@ -49,6 +52,7 @@ public class GameManager : MonoBehaviour
 
     public void SetGameState(GameState state)
     {
+        // set state for other scripts to use
         GameState previousState = gameState;
         gameState = state;
 
@@ -61,13 +65,20 @@ public class GameManager : MonoBehaviour
                 break;
             case GameState.Playing:
                     Time.timeScale = 1f;
-                if (previousState == GameState.Paused) break;
-                EditorSceneManager.LoadScene("Assets/Scenes/Game.unity");break;
+                if (previousState == GameState.Paused) break; // returning from pause menu to playing
+                EditorSceneManager.LoadScene("Assets/Scenes/Game.unity");
+                
+                score = 0;
+                break;
                 
             case GameState.Paused:
                 Time.timeScale = 0f;
                 break;
             case GameState.GameOver:
+                if (score > highScore)
+                {
+                    SetHighScore(score);
+                }
                 Time.timeScale = 0f;
                 break;
             default:
@@ -75,7 +86,7 @@ public class GameManager : MonoBehaviour
                 Time.timeScale = 1f;
                 break;
         }
-        OnGameStateChanged?.Invoke(gameState);
+        OnGameStateChanged?.Invoke(gameState); // invoke event for other scripts to listen to
 
     }
     public GameState GetGameState()
@@ -85,22 +96,36 @@ public class GameManager : MonoBehaviour
     public static void AddScore(int value)
     {
         score += value;
+        Debug.Log($"Score: {score}");
     }
-    /*
-    public void PlayPressed()
+    public static int GetScore()
     {
-        Debug.Log("Play pressed");
-        SetGameState(GameState.Playing);
+        return score;
+    }
+    [System.Serializable]
+    public struct HighScoreData
+    {
+        public int highScore;
+    }
+    public static void SetHighScore(int value)
+    {
+        highScore = value;
+        HighScoreData highScoreData = new HighScoreData
+        {
+            highScore = highScore
+        };
+        string path = "Assets/highscore.json"; 
+        string json = JsonUtility.ToJson(highScoreData);
+        Debug.Log(json);
+        File.WriteAllText(path, json);
 
     }
-    public void RestartPressed()
+    public static int GetHighScore()
     {
-        Debug.Log("Restart pressed");
-        SetGameState(GameState.Playing);
+        string json = (File.ReadAllText("Assets/highscore.json"));
+        HighScoreData highScoreData = JsonUtility.FromJson<HighScoreData>(json);
+        highScore = highScoreData.highScore;
+        return highScore;
     }
-    public void MainMenuPressed()
-    {
-        Debug.Log("Main Menu pressed");
-        SetGameState(GameState.Menu);
-    }*/
+    
 }

@@ -31,12 +31,14 @@ Material:
     m_Floats:
     - _BUILTIN_QueueControl: 0
     - _BUILTIN_QueueOffset: 0
-    - _HighlightSpread: 3
+    - _HighlightSpread: 3.5
+    - _LineSize: -1
     - _MovementSpeed: 2
     - _Scale: 120
     m_Colors:
-    - _BaseColor: {r: 0.6037736, g: 0.1619711, b: 0, a: 0}
+    - _BaseColor: {r: 0.6039216, g: 0.15522952, b: 0, a: 0}
     - _HighlightColor: {r: 1.962264, g: 1.275806, b: 0.5461019, a: 0}
+    - _LineColor: {r: 0.20754719, g: 0.025349002, b: 0.018600922, a: 0}
     - _Offset: {r: 0.0005, g: 0.0001, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &5657002395037489531

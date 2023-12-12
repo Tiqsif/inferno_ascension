@@ -8,7 +8,8 @@ public class PlatformHandler : MonoBehaviour
 {
     //handles the lava and platforms
     public float lavaStartHeight = -5f;
-    public float lavaSpeed = 1f;
+    private float lavaSpeed = 1.2f;
+    private float lavaAcceleration = 0.002f;
     private Platform[] platforms;
     private float lavaHeight;
     private float elapsedTime = 0;
@@ -21,6 +22,7 @@ public class PlatformHandler : MonoBehaviour
     void Start()
     {
         gameManager = GameManager.Instance;
+        // create lava sprite and assign material
         lava = new GameObject("Lava").transform;
         lava.parent = transform;
         SpriteRenderer lavaSR = lava.AddComponent<SpriteRenderer>();
@@ -28,6 +30,7 @@ public class PlatformHandler : MonoBehaviour
         lavaSR.material = lavaMaterial;
         lava.localPosition = new Vector3(-10, 0, -2);
         lava.localScale = new Vector3(2000, 2000, 1);
+
         platforms = FindObjectsOfType<Platform>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
         lavaHeight = lavaStartHeight;
@@ -38,7 +41,7 @@ public class PlatformHandler : MonoBehaviour
     {
         if (gameOver) return;
 
-        lavaHeight += Time.deltaTime * lavaSpeed;
+        lavaHeight += Time.deltaTime * lavaSpeed; // increase lava height
         lava.position = new Vector3(lava.position.x, lavaHeight - (lava.localScale.y / 100), lava.position.z);
 
         if (player.position.y < lavaHeight)
@@ -50,9 +53,12 @@ public class PlatformHandler : MonoBehaviour
         //Debug.Log(elapsedTime);
         if (elapsedTime > 1)
         {
+            // check if there are platforms below lava every second
             platforms = FindObjectsOfType<Platform>();
             DestroyPlatformsBelowLava();
             CreatePlatforms();
+            lavaSpeed += lavaAcceleration;
+            GameManager.AddScore(1 * Mathf.CeilToInt(lavaSpeed - 1));
             elapsedTime = 0;
         }
         else
@@ -92,10 +98,15 @@ public class PlatformHandler : MonoBehaviour
 
     void CreatePlatforms()
     {
+        // create platforms randomly in an area above the player
+        // area is a virtual box above the player
         float minY = player.position.y + 5;
         float maxY = minY + 5;
         float minX = -2.5f;
         float maxX = 2.5f;
+
+        // check if there are platforms in a bigger area
+        // create platforms only if there are none in a smaller area to avoid creating too close to each other
         float placeMinY = minY + 2;
         float placeMaxY = maxY - 2;
         int platformsInArea = 0;
