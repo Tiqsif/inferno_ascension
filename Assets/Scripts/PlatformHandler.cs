@@ -17,6 +17,7 @@ public class PlatformHandler : MonoBehaviour
     private bool gameOver = false;
     private Transform lava;
     [SerializeField] private Material lavaMaterial;
+    [SerializeField] private GameObject lavaParticle;
     private GameManager gameManager;
     // Start is called before the first frame update
     void Start()
@@ -78,10 +79,27 @@ public class PlatformHandler : MonoBehaviour
             if (platform.transform.position.y < lavaHeight - 1)
             {
                 Debug.Log("Destroying platforms below lava");
+
+                CreateParticle(new Vector3(platform.transform.position.x, lavaHeight, 0));
                 Destroy(platform.gameObject);
+
             }
         }
 
+    }
+    void CreateParticle(Vector3 pos)
+    {
+        foreach (Transform child in transform)
+        {
+            // if child name has Particle in it, destroy it
+            if (child.name.Contains("Particle"))
+            {
+                Destroy(child.gameObject);
+            }
+            
+        }
+        GameObject particle = Instantiate(lavaParticle, pos, Quaternion.identity);
+        particle.transform.parent = transform;
     }
     void GameOver()
     {

@@ -627,6 +627,10 @@ PrefabInstance:
       propertyPath: lavaMaterial
       value: 
       objectReference: {fileID: 2100000, guid: 58f9a89e75b768e46ba7c44009924949, type: 2}
+    - target: {fileID: 1895546777822478908, guid: c22eea31850dd204cafdb495716019d3, type: 3}
+      propertyPath: lavaParticle
+      value: 
+      objectReference: {fileID: 5974178339619092173, guid: 53f1ba779367d684ea76ea35a0e3b741, type: 3}
     - target: {fileID: 2468274240935881600, guid: c22eea31850dd204cafdb495716019d3, type: 3}
       propertyPath: m_Name
       value: PlatformHandler
@@ -903,6 +907,7 @@ MonoBehaviour:
   bgProps:
   - {fileID: 21300000, guid: 573392412eeb7d34f95f42d42854410d, type: 3}
   - {fileID: 21300000, guid: 2db42525f6159f147b11eae31960722f, type: 3}
+  crowdedness: 1
 --- !u!1 &1726047986
 GameObject:
   m_ObjectHideFlags: 0
