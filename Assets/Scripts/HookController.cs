@@ -75,7 +75,7 @@ public class HookController : MonoBehaviour
         
         rotation = transform.rotation.eulerAngles.z;
         playerAnimator.SetBool("isClimbing", isPlayerClimbing);
-        if (isThrown && Mathf.Abs((player.transform.position - transform.position).magnitude) > range) { // if too far away from player
+        if (isThrown && ((Mathf.Abs((player.transform.position - transform.position).magnitude) > range) || Mathf.Abs(transform.position.x) > Camera.main.orthographicSize/2 )) { // if too far away from player
             ResetHook();
         }
         if (isThrown)
@@ -108,10 +108,7 @@ public class HookController : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
-    {
-        
-    }
+    
 
     void CreateChain(Vector3 from, Vector3 to) // creates chain sprites between two points
     {

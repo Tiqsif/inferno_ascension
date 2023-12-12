@@ -9,7 +9,7 @@ public class PlatformHandler : MonoBehaviour
     //handles the lava and platforms
     public float lavaStartHeight = -5f;
     private float lavaSpeed = 1.2f;
-    private float lavaAcceleration = 0.002f;
+    private float lavaAcceleration = 0.004f;
     private Platform[] platforms;
     private float lavaHeight;
     private float elapsedTime = 0;
@@ -75,7 +75,7 @@ public class PlatformHandler : MonoBehaviour
 
         foreach (Platform platform in platforms)
         {
-            if (platform.transform.position.y < lavaHeight)
+            if (platform.transform.position.y < lavaHeight - 1)
             {
                 Debug.Log("Destroying platforms below lava");
                 Destroy(platform.gameObject);
@@ -100,10 +100,10 @@ public class PlatformHandler : MonoBehaviour
     {
         // create platforms randomly in an area above the player
         // area is a virtual box above the player
-        float minY = player.position.y + 5;
+        float minY = player.position.y + 10;
         float maxY = minY + 5;
-        float minX = -2.5f;
-        float maxX = 2.5f;
+        float minX = -2f;
+        float maxX = 2f;
 
         // check if there are platforms in a bigger area
         // create platforms only if there are none in a smaller area to avoid creating too close to each other
