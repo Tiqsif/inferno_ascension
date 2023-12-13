@@ -11,4 +11,6 @@ You the player must swing the hook you got and get away from the lava.
 ## Whats to come
 * Better visuals!
 * Sound and music.
+
+##
 ![GIF 13 12 2023 22-06-01](https://github.com/Tiqsif/inferno_ascension/assets/75688355/60d8ac15-cc04-4b6b-8027-13c08c7fa4e2)
