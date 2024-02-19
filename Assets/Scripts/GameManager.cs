@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
@@ -62,7 +61,7 @@ public class GameManager : MonoBehaviour
         switch (gameState)
         {
             case GameState.Menu:
-                EditorSceneManager.LoadScene("Assets/Scenes/MainMenu.unity");
+                SceneManager.LoadScene("Assets/Scenes/MainMenu.unity");
                 Time.timeScale = 1f;
                 break;
             case GameState.Playing:
@@ -71,7 +70,7 @@ public class GameManager : MonoBehaviour
                 {
                     break; // returning from pause menu to playing
                 }
-                EditorSceneManager.LoadScene("Assets/Scenes/Game.unity");
+                SceneManager.LoadScene("Assets/Scenes/Game.unity");
                 
                 score = 0;
                 break;
@@ -87,7 +86,7 @@ public class GameManager : MonoBehaviour
                 Time.timeScale = 0f;
                 break;
             default: // default to menu
-                EditorSceneManager.LoadScene("Assets/Scenes/MainMenu.unity");
+                SceneManager.LoadScene("Assets/Scenes/MainMenu.unity");
                 Time.timeScale = 1f;
                 break;
         }
