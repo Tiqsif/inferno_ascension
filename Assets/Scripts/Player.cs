@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    // Start is called before the first frame update
+    AudioSource audioSource;
+    public AudioClip deathSound;
     void Start()
     {
         
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -17,6 +19,7 @@ public class Player : MonoBehaviour
     }
     public void Die()
     {
+        audioSource.PlayOneShot(deathSound);
         Debug.Log("Player died");
         //GameManager.Instance.SetGameState(GameManager.GameState.GameOver);
         //Destroy(gameObject);

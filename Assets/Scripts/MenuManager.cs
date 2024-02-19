@@ -13,10 +13,13 @@ public class MenuManager : MonoBehaviour
     public GameObject gameOverMenu;
     public GameObject scoreHolder;
     private TextMeshProUGUI scoreText;
+    private AudioSource audioSource;
+    public AudioClip pauseSound;
     private void Awake()
     {
         gameManager = GameManager.Instance;
         GameManager.OnGameStateChanged += HandleGameStateChanged; // subscribe to event
+        audioSource = GetComponent<AudioSource>();
         
     }
 
@@ -26,7 +29,7 @@ public class MenuManager : MonoBehaviour
         GameManager.OnGameStateChanged -= HandleGameStateChanged; // unsubscribe to event for memory management
     }
 
-    void HandleGameStateChanged(GameManager.GameState currentState)
+    void HandleGameStateChanged(GameManager.GameState currentState, GameManager.GameState previousState)
     {
         // when game state changes, this method will be called
         if (currentState == GameManager.GameState.Playing)
@@ -84,6 +87,8 @@ public class MenuManager : MonoBehaviour
             if (gameManager.GetGameState() == GameState.Playing)
             {
                 gameManager.SetGameState(GameManager.GameState.Paused);
+                audioSource.PlayOneShot(pauseSound);
+
             }
             else if (gameManager.GetGameState() == GameState.Paused)
             {

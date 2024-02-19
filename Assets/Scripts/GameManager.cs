@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
 { 
     static GameManager instance;
     static GameState gameState;
-    public static event Action<GameState> OnGameStateChanged;
+    public static event Action<GameState, GameState> OnGameStateChanged;
     static int score = 0;
     static int highScore = 0;
     public static GameManager Instance
@@ -38,9 +38,11 @@ public class GameManager : MonoBehaviour
     }
     private void Awake()
     {
+        OnGameStateChanged?.Invoke(gameState, gameState); // invoke event for other scripts to listen to
     }
     void Start()
     {
+        
         highScore = GetHighScore();
         Time.timeScale = 1.0f;
     }
@@ -64,8 +66,11 @@ public class GameManager : MonoBehaviour
                 Time.timeScale = 1f;
                 break;
             case GameState.Playing:
-                    Time.timeScale = 1f;
-                if (previousState == GameState.Paused) break; // returning from pause menu to playing
+                Time.timeScale = 1f;
+                if (previousState == GameState.Paused)
+                {
+                    break; // returning from pause menu to playing
+                }
                 EditorSceneManager.LoadScene("Assets/Scenes/Game.unity");
                 
                 score = 0;
@@ -81,12 +86,12 @@ public class GameManager : MonoBehaviour
                 }
                 Time.timeScale = 0f;
                 break;
-            default:
+            default: // default to menu
                 EditorSceneManager.LoadScene("Assets/Scenes/MainMenu.unity");
                 Time.timeScale = 1f;
                 break;
         }
-        OnGameStateChanged?.Invoke(gameState); // invoke event for other scripts to listen to
+        OnGameStateChanged?.Invoke(gameState, previousState); // invoke event for other scripts to listen to
 
     }
     public GameState GetGameState()
@@ -96,7 +101,7 @@ public class GameManager : MonoBehaviour
     public static void AddScore(int value)
     {
         score += value;
-        Debug.Log($"Score: {score}");
+        //Debug.Log($"Score: {score}");
     }
     public static int GetScore()
     {

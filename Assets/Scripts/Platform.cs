@@ -10,10 +10,12 @@ public class Platform : MonoBehaviour
     public Transform standPoint; // the point where the player stands on the platform
     private bool hasCoin = false;
     public bool isCurrentPlatform = false; 
+    private AudioSource audioSource;
     GameManager gameManager;
     private void Awake()
     {
         gameManager = GameManager.Instance;
+        audioSource = GetComponent<AudioSource>();
         ShuffleArray(stoneSprites);
         hasCoin = Random.Range(0, 10) == 0; // 10% chance of having a coin
         standPoint = transform.GetChild(0).GetComponent<Transform>();
@@ -82,6 +84,7 @@ public class Platform : MonoBehaviour
         if (hasCoin)
         {
             GameManager.AddScore(10);
+            audioSource.Play();
             hasCoin = false;
         }
         Destroy(coin);

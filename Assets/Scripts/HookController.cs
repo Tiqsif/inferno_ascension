@@ -18,6 +18,14 @@ public class HookController : MonoBehaviour
     public float playerJumpSpeed = 3f;
     public float playerJumpHeight = 0.8f;
 
+    public AudioClip hookThrowSound;
+    public AudioClip hookHitSound;
+    public AudioClip hookInvalidHitSound;
+    public AudioClip playerJumpSound;
+    public AudioClip playerClimbSound;
+
+
+
     private Vector3 rotateAround;
     private Vector3 hookStartPos;
     private Vector3 initialPos;
@@ -34,12 +42,13 @@ public class HookController : MonoBehaviour
     private Rigidbody2D playerRb;
     private Vector3 playerInitialPos;
     private Animator playerAnimator;
-
+    private AudioSource audioSource;
 
     private GameManager gameManager;
     void Start()
     {
         gameManager = GameManager.Instance;
+        audioSource = GetComponent<AudioSource>();
         // hold point is the point where the hook is attached and rotates around
         holdPoint = transform.parent;
 
@@ -63,7 +72,7 @@ public class HookController : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(player.position, -player.up, range);
         if (hit)
         {
-            Debug.Log("hit: " + hit.collider.gameObject.name);
+            //Debug.Log("hit: " + hit.collider.gameObject.name);
             StartCoroutine(JumpToPlatform(player.position, hit.collider.gameObject.GetComponent<Platform>(), 0.1f));
         }
     }
@@ -76,6 +85,7 @@ public class HookController : MonoBehaviour
         rotation = transform.rotation.eulerAngles.z;
         playerAnimator.SetBool("isClimbing", isPlayerClimbing);
         if (isThrown && ((Mathf.Abs((player.transform.position - transform.position).magnitude) > range) || Mathf.Abs(transform.position.x) > Camera.main.orthographicSize/2 )) { // if too far away from player
+            audioSource.PlayOneShot(hookInvalidHitSound);
             ResetHook();
         }
         if (isThrown)
@@ -91,11 +101,11 @@ public class HookController : MonoBehaviour
             Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, player.position.y, Camera.main.transform.position.z);
         }
 
-        if (Input.GetKeyDown(KeyCode.R) && !isPlayerClimbing && !isThrown)
-        {
-            ResetScene(); // teleport player to initial position DO NOT USE THIS IN GAME - WILL BE REMOVED
+        //if (Input.GetKeyDown(KeyCode.R) && !isPlayerClimbing && !isThrown)
+        //{
+        //    ResetScene(); // teleport player to initial position DO NOT USE THIS IN GAME - WILL BE REMOVED
          
-        }
+        //}
         if (!isThrown && !isPlayerClimbing && Input.GetMouseButton(0)) // hold mouse click to rotate the hook and aim
         {
             RotateHook();
@@ -148,6 +158,7 @@ public class HookController : MonoBehaviour
 
     void ThrowHook() // throw the hooks rigidbody
     {
+        audioSource.PlayOneShot(hookThrowSound);
         isThrown = true;
         rb.simulated = true;
         rb.velocity = transform.right * throwSpeed ;
@@ -157,7 +168,8 @@ public class HookController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Platform") && isThrown) // if hook hits a platform, transfer player to the platform
         {
-            
+            audioSource.PlayOneShot(hookHitSound);
+
             Platform platform = collision.gameObject.GetComponent<Platform>();
             rb.velocity = Vector2.zero;
             rb.simulated = false;
@@ -167,6 +179,10 @@ public class HookController : MonoBehaviour
             
             
             
+        }
+        else
+        {
+            audioSource.PlayOneShot(hookInvalidHitSound);
         }
         
     }
@@ -243,7 +259,11 @@ public class HookController : MonoBehaviour
         
         while (elapsedTime < time)
         {
-            
+            if (!audioSource.isPlaying)
+            {
+                audioSource.PlayOneShot(playerClimbSound);
+            }
+
             playerRb.position = Vector3.Lerp(startingPos, hit , (elapsedTime / time));
             playerRb.position += new Vector2( Mathf.Sin(playerRb.position.y * playerSwingSpeed) * playerSwingAmount, 0);
             elapsedTime += Time.deltaTime;
@@ -255,7 +275,9 @@ public class HookController : MonoBehaviour
     
     private IEnumerator JumpToPlatform(Vector3 hit, Platform platform, float time) // for animation purposes
     { 
-        Debug.Log("jumping to platform" + platform.gameObject.name);
+        //Debug.Log("jumping to platform" + platform.gameObject.name);
+        audioSource.PlayOneShot(playerJumpSound);
+
         player.rotation = Quaternion.Euler(player.rotation.eulerAngles.x, player.rotation.eulerAngles.y, 0);
         float elapsedTime = 0;
         Vector3 startingPos = playerRb.position;
