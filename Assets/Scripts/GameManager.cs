@@ -1,11 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
 using System.IO;
-using static GameManager;
 
 public class GameManager : MonoBehaviour
 { 
@@ -46,10 +43,6 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1.0f;
     }
 
-    void Update()
-    {
-
-    }
 
     public void SetGameState(GameState state)
     {
@@ -57,7 +50,7 @@ public class GameManager : MonoBehaviour
         GameState previousState = gameState;
         gameState = state;
 
-        Debug.Log($"Game state changed from {previousState} to {gameState}");
+        //Debug.Log($"Game state changed from {previousState} to {gameState}");
         switch (gameState)
         {
             case GameState.Menu:

@@ -49,7 +49,6 @@ public class PlatformHandler : MonoBehaviour
         {
             GameOver();
 
-            player.GetComponent<Player>().Die();
         }
         //Debug.Log(elapsedTime);
         if (elapsedTime > 1)
@@ -104,7 +103,9 @@ public class PlatformHandler : MonoBehaviour
     void GameOver()
     {
         gameOver = true;
-        Debug.Log("Game Over");
+
+        player.GetComponent<Player>().Die();
+        //Debug.Log("Game Over");
         gameManager.SetGameState(GameManager.GameState.GameOver);
 
     }

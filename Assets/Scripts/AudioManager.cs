@@ -42,7 +42,7 @@ public class AudioManager : MonoBehaviour
     {
         if (state == GameManager.GameState.Menu)
         {
-                Debug.Log("Menu");
+            //Debug.Log("Menu");
             audioSource.clip = menuMusic;
             audioSource.loop = true;
             audioSource.Play();
@@ -52,11 +52,11 @@ public class AudioManager : MonoBehaviour
             if (previousState == GameManager.GameState.Paused)
             {
                 audioSource.UnPause();
-                Debug.Log("Paused to Playing");
+                //Debug.Log("Paused to Playing");
             }
             else
             {
-                Debug.Log("Directly to Playing");
+                //Debug.Log("Directly to Playing");
                 audioSource.clip = gameMusic;
                 audioSource.loop = true;
                 audioSource.Play();
@@ -64,14 +64,14 @@ public class AudioManager : MonoBehaviour
         }
         else if (state == GameManager.GameState.GameOver)
         {
-                Debug.Log("GameOver");
+            //Debug.Log("GameOver");
             audioSource.clip = gameOverMusic;
             audioSource.loop = true;
             audioSource.Play();
         }
         else if (state == GameManager.GameState.Paused)
         {
-                Debug.Log("Paused");
+            //Debug.Log("Paused");
             audioSource.Pause();
         }
     }

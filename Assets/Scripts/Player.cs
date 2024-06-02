@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     public void Die()
     {
         audioSource.PlayOneShot(deathSound);
-        Debug.Log("Player died");
+        //Debug.Log("Player died");
         //GameManager.Instance.SetGameState(GameManager.GameState.GameOver);
         //Destroy(gameObject);
     }

@@ -44,7 +44,7 @@ public class MenuManager : MonoBehaviour
             gameOverMenu.SetActive(false);
             scoreHolder.SetActive(true);
         }
-        else if (currentState == GameManager.GameState.GameOver)
+        else if (currentState == GameManager.GameState.GameOver) // might be a problem here
         {
             pauseMenu.SetActive(false);
             gameOverMenu.SetActive(true);
