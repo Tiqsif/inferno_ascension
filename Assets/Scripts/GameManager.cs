@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour
         switch (gameState)
         {
             case GameState.Menu:
-                SceneManager.LoadScene("Assets/Scenes/MainMenu.unity");
+                SceneManager.LoadScene(0); // main menu
                 Time.timeScale = 1f;
                 break;
             case GameState.Playing:
@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
                 {
                     break; // returning from pause menu to playing
                 }
-                SceneManager.LoadScene("Assets/Scenes/Game.unity");
+                SceneManager.LoadScene(1); // game scene
                 
                 score = 0;
                 break;
@@ -79,7 +79,7 @@ public class GameManager : MonoBehaviour
                 Time.timeScale = 0f;
                 break;
             default: // default to menu
-                SceneManager.LoadScene("Assets/Scenes/MainMenu.unity");
+                SceneManager.LoadScene(0); // main menu
                 Time.timeScale = 1f;
                 break;
         }
@@ -107,21 +107,20 @@ public class GameManager : MonoBehaviour
     public static void SetHighScore(int value)
     {
         highScore = value;
-        HighScoreData highScoreData = new HighScoreData
-        {
-            highScore = highScore
-        };
-        string path = "Assets/highscore.json"; 
-        string json = JsonUtility.ToJson(highScoreData);
-        Debug.Log(json);
-        File.WriteAllText(path, json);
+        PlayerPrefs.SetInt("highscore", highScore);
 
     }
     public static int GetHighScore()
     {
-        string json = (File.ReadAllText("Assets/highscore.json"));
-        HighScoreData highScoreData = JsonUtility.FromJson<HighScoreData>(json);
-        highScore = highScoreData.highScore;
+        if (PlayerPrefs.HasKey("highscore"))
+        {
+            highScore = PlayerPrefs.GetInt("highscore");
+        }
+        else
+        {
+            highScore = 0;
+        }
+
         return highScore;
     }
     
